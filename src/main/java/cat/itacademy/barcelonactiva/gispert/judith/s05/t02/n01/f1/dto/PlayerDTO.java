@@ -7,33 +7,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDTO {
-    private int idPlayer;
-    private String name;
-    private LocalDateTime registrationDate;
-    private List<DiceRoll> games;
+    private int idPlayerDTO;
+    private String nameDTO;
+    private LocalDateTime registrationDateDTO;
+    private List<DiceRoll> gamesDTO;
 
     public PlayerDTO(){}
-    public PlayerDTO(String name){
-        this.name = ""; //TODO method user not same name
-        this.registrationDate = LocalDateTime.now();
-        games = new ArrayList<>();
+    public PlayerDTO(String nameDTO){
+        this.nameDTO = ""; //TODO method user not same name
+        this.registrationDateDTO = LocalDateTime.now();
+        gamesDTO = new ArrayList<>();
     }
 
-    public int getIdPlayer() {return idPlayer;}
-    public String getName() {return name;}
-    public LocalDateTime getRegistrationDate() {return registrationDate;}
-    public List<DiceRoll> getGames() {return games;}
+    public int getIdPlayerDTO() {return idPlayerDTO;}
+    public String getNameDTO() {return nameDTO;}
+    public LocalDateTime getRegistrationDateDTO() {return registrationDateDTO;}
+    public List<DiceRoll> getGamesDTO() {return gamesDTO;}
 
-    public void setIdPlayer(int idPlayer) {
-        this.idPlayer = idPlayer;
+    public void setIdPlayerDTO(int idPlayerDTO) {
+        this.idPlayerDTO = idPlayerDTO;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setNameDTO(String nameDTO) {
+        this.nameDTO = nameDTO;
     }
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setRegistrationDateDTO(LocalDateTime registrationDateDTO) {
+        this.registrationDateDTO = registrationDateDTO;
     }
-    public void setGames(List<DiceRoll> games) {
-        this.games = games;
+    public void setGamesDTO(List<DiceRoll> gamesDTO) {
+        this.gamesDTO = gamesDTO;
     }
 }
