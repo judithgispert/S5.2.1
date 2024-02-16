@@ -12,7 +12,6 @@ import java.util.List;
 public class PlayerDTO {
     private int idPlayerDTO;
     private String nameDTO;
-    private String passwordDTO;
     private LocalDateTime registrationDateDTO;
     private int gamesWonDTO;
     private double percentageWonDTO;
@@ -21,13 +20,6 @@ public class PlayerDTO {
     private List<DiceRoll> gamesDTO;
 
     public PlayerDTO() {
-    }
-
-    public PlayerDTO(String nameDTO, String passwordDTO) {
-        this.nameDTO = nameDTO;
-        this.passwordDTO = passwordDTO;
-        this.registrationDateDTO = LocalDateTime.now();
-        gamesDTO = new ArrayList<>();
     }
 }
 
