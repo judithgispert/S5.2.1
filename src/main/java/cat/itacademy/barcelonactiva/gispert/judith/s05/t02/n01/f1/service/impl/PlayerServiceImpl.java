@@ -73,7 +73,6 @@ public class PlayerServiceImpl implements IPlayerService {
                     updatedPlayer.setName(newPlayer.getName());
                 }
             }
-            updatedPlayer.setPassword(newPlayer.getPassword());
             playerRepository.save(updatedPlayer);
             return playerToPlayerDTO(updatedPlayer);
         } else {
@@ -91,20 +90,6 @@ public class PlayerServiceImpl implements IPlayerService {
         }
     }
 
-    @Override
-    public void updateResultGames(DiceRollDTO diceRollDTO, Player player){
-        if(diceRollDTO.winGame()){
-            player.setGamesWon(player.getGamesWon()+1);
-            double resultPercentageWon = ((double) player.getGamesWon() / player.getGames().size())*100;
-            player.setPercentageWon(resultPercentageWon);
-            playerRepository.save(player);
-        } else {
-            player.setGamesLost(player.getGamesLost()+1);
-            double resultPercentageLost = ((double) player.getGamesWon() / player.getGamesLost())*100;
-            player.setPercentageLost(resultPercentageLost);
-            playerRepository.save(player);
-        }
-    }
 
     @Override
     public DiceRollDTO play(int id){
@@ -122,17 +107,38 @@ public class PlayerServiceImpl implements IPlayerService {
         return diceRollService.getGames(player);
     }
 
+    @Override
+    public void updateResultGames(DiceRollDTO diceRollDTO, Player player){
+        if(diceRollDTO.winGame()){
+            player.setGamesWon(player.getGamesWon()+1);
+            double resultPercentageWon = ((double) player.getGamesWon() / player.getGames().size())*100;
+            player.setPercentageWon(resultPercentageWon);
+            playerRepository.save(player);
+        } else {
+            player.setGamesLost(player.getGamesLost()+1);
+            double resultPercentageLost = (100 - player.getPercentageWon());
+            player.setPercentageLost(resultPercentageLost);
+            playerRepository.save(player);
+        }
+    }
+
+    //TODO create methods: ranking + first class + the last
+    /*@Override
+    public DiceRollDTO getRanking(){
+        List<PlayerDTO> players = getPlayers();
+        players.stream().
+    }*/
+
     private static Player playerDTOToPlayer(PlayerDTO playerDTO){
         Player player = new Player();
         player.setIdPlayer(playerDTO.getIdPlayerDTO());
         player.setName(playerDTO.getNameDTO());
-        player.setPassword(playerDTO.getPasswordDTO());
         player.setRegistrationDate(playerDTO.getRegistrationDateDTO());
         player.setGames(playerDTO.getGamesDTO());
         player.setGamesWon(playerDTO.getGamesWonDTO());
         player.setGamesLost(playerDTO.getGamesLostDTO());
-        player.setPercentageWon(playerDTO.getPercentageWon());
-        player.setPercentageLost(playerDTO.getPercentageLost());
+        player.setPercentageWon(playerDTO.getPercentageWonDTO());
+        player.setPercentageLost(playerDTO.getPercentageLostDTO());
         return player;
     }
 
@@ -140,13 +146,12 @@ public class PlayerServiceImpl implements IPlayerService {
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setIdPlayerDTO(player.getIdPlayer());
         playerDTO.setNameDTO(player.getName());
-        playerDTO.setPasswordDTO(player.getPassword());
         playerDTO.setRegistrationDateDTO(player.getRegistrationDate());
         playerDTO.setGamesDTO(player.getGames());
         playerDTO.setGamesWonDTO(player.getGamesWon());
         playerDTO.setGamesLostDTO(player.getGamesLost());
-        playerDTO.setPercentageWon(player.getPercentageWon());
-        playerDTO.setPercentageLost(player.getPercentageLost());
+        playerDTO.setPercentageWonDTO(player.getPercentageWon());
+        playerDTO.setPercentageLostDTO(player.getPercentageLost());
         return playerDTO;
     }
 }
