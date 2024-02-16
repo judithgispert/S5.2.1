@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.f1</groupId>
-	<artifactId>S05T02N01F1GispertJudith</artifactId>
+	<artifactId>S05T02N01GispertJudith</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>S05T02N01F1GispertJudith</name>
 	<description>S05T02N01F1GispertJudith</description>
