@@ -1,82 +1,77 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.f1.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "players")
-public class Player {
+public class Player implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPlayer;
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @Column(name = "email", unique = true, nullable = false, length = 150)
+    private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column(name = "date", nullable = false)
     private LocalDateTime registrationDate;
+
     @Column(name = "games won")
     private int gamesWon;
-    @Column(name = "% games won")
+    @Column(name = "% won")
     private double percentageWon;
     @Column(name = "games lost")
     private int gamesLost;
-    @Column(name = "% games lost")
+    @Column(name = "% lost")
     private double percentageLost;
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DiceRoll> games;
 
-    public Player(){}
-    public Player (String name, String password){
-        this.name = name;
-        this.password = password;
+    public Player(){
         this.registrationDate = LocalDateTime.now();
         games = new ArrayList<>();
     }
 
-    public int getIdPlayer() {return idPlayer;}
-    public String getName() {return name;}
-    public String getPassword() {return password;}
-    public LocalDateTime getRegistrationDate() {return registrationDate;}
-    public List<DiceRoll> getGames() {return games;}
-    public int getGamesWon() {
-        return gamesWon;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
-    public int getGamesLost() {
-        return gamesLost;
+    @Override
+    public String getUsername() {
+        return email;
     }
-    public double getPercentageWon() {
-        return percentageWon;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
-    public double getPercentageLost() {
-        return percentageLost;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
-
-    public void setIdPlayer(int idPlayer) {
-        this.idPlayer = idPlayer;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public void setRegistrationDate(LocalDateTime registrationDate) {this.registrationDate = registrationDate;}
-    public void setGames(List<DiceRoll> games) {
-        this.games = games;
-    }
-    public void setGamesWon(int gamesWon) {
-        this.gamesWon = gamesWon;
-    }
-    public void setGamesLost(int gamesLost) {
-        this.gamesLost = gamesLost;
-    }
-    public void setPercentageWon(double percentageWon) {
-        this.percentageWon = percentageWon;
-    }
-    public void setPercentageLost(double percentageLost) {
-        this.percentageLost = percentageLost;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
