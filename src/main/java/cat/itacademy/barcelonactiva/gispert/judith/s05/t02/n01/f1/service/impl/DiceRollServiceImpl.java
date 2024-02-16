@@ -6,11 +6,12 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.f1.dto.DiceRollDT
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.f1.repository.IDiceRollRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.f1.service.IDiceRollService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class DiceRollServiceImpl implements IDiceRollService {
     @Autowired
     private IDiceRollRepository diceRollRepository;
