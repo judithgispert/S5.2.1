@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl;
 
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,14 +9,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+public class JwtService implements cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
 
@@ -59,12 +58,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey())
-                .build().parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().verifyWith(getSigningKey())
+                .build().parseSignedClaims(token).getPayload();
     }
 
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
