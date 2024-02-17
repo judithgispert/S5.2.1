@@ -39,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate
                 (new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
-        var user = userRepository.finByEmail(request.getEmail())
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new PlayerNotFoundException
                         ("Player not found with email: " + request.getEmail()));
         var jwt = jwtService.generateToken(user);
