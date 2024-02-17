@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements IPlayerService {
@@ -122,12 +124,28 @@ public class PlayerServiceImpl implements IPlayerService {
         }
     }
 
-    //TODO create methods: ranking + first class + the last
-    /*@Override
-    public DiceRollDTO getRanking(){
-        List<PlayerDTO> players = getPlayers();
-        players.stream().
-    }*/
+    @Override
+    public List<PlayerDTO> getRanking(){
+        return getPlayers().stream()
+                .sorted(Comparator.comparingDouble(PlayerDTO::getPercentageWonDTO))
+                .toList();
+    }
+
+    @Override
+    public void getPercentageRanking(){
+        System.out.println(getPlayers().stream()
+                .mapToDouble(PlayerDTO::getPercentageWonDTO).sum());
+    }
+
+    @Override
+    public PlayerDTO getLoser(){
+        return getRanking().stream().toList().getLast();
+    }
+
+    @Override
+    public PlayerDTO getWinner(){
+        return getRanking().stream().toList().getFirst();
+    }
 
     private static Player playerDTOToPlayer(PlayerDTO playerDTO){
         Player player = new Player();

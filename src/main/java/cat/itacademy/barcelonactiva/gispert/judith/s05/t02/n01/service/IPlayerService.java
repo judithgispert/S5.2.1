@@ -16,4 +16,8 @@ public interface IPlayerService {
     public void updateResultGames(DiceRollDTO diceRollDTO, Player player);
     public DiceRollDTO play(int id);
     List<DiceRollDTO> getGames(int id);
+    List<PlayerDTO> getRanking();
+    public void getPercentageRanking();
+    public PlayerDTO getLoser();
+    public PlayerDTO getWinner();
 }
