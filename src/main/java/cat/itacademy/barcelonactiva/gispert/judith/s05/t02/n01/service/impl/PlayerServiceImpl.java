@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements IPlayerService {
@@ -98,7 +97,7 @@ public class PlayerServiceImpl implements IPlayerService {
         PlayerDTO playerDTO = getPlayerById(id);
         Player player = playerDTOToPlayer(playerDTO);
         DiceRollDTO diceRollDTO = diceRollService.addGame(player);
-        updateResultGames(diceRollDTO, player);
+        updateResultGames(diceRollDTO, playerToPlayerDTO(player));
         return diceRollDTO;
     }
 
@@ -110,17 +109,33 @@ public class PlayerServiceImpl implements IPlayerService {
     }
 
     @Override
-    public void updateResultGames(DiceRollDTO diceRollDTO, Player player){
+    public void deleteGames(int id){
+        PlayerDTO playerDTO = getPlayerById(id);
+        diceRollService.deleteGames(playerDTOToPlayer(playerDTO));
+        restartPercentage(playerDTO);
+        playerRepository.save(playerDTOToPlayer(playerDTO));
+    }
+
+    @Override
+    public void restartPercentage(PlayerDTO playerDTO){
+        playerDTO.setPercentageLostDTO(0);
+        playerDTO.setPercentageWonDTO(0);
+        playerDTO.setGamesLostDTO(0);
+        playerDTO.setGamesWonDTO(0);
+    }
+
+    @Override
+    public void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO){
         if(diceRollDTO.winGame()){
-            player.setGamesWon(player.getGamesWon()+1);
-            double resultPercentageWon = ((double) player.getGamesWon() / player.getGames().size())*100;
-            player.setPercentageWon(resultPercentageWon);
-            playerRepository.save(player);
+            playerDTO.setGamesWonDTO(playerDTO.getGamesWonDTO()+1);
+            double resultPercentageWon = ((double) playerDTO.getGamesWonDTO() / playerDTO.getGamesDTO().size())*100;
+            playerDTO.setPercentageWonDTO(resultPercentageWon);
+            playerRepository.save(playerDTOToPlayer(playerDTO));
         } else {
-            player.setGamesLost(player.getGamesLost()+1);
-            double resultPercentageLost = (100 - player.getPercentageWon());
-            player.setPercentageLost(resultPercentageLost);
-            playerRepository.save(player);
+            playerDTO.setGamesLostDTO(playerDTO.getGamesLostDTO()+1);
+            double resultPercentageLost = (100 - playerDTO.getPercentageWonDTO());
+            playerDTO.setPercentageLostDTO(resultPercentageLost);
+            playerRepository.save(playerDTOToPlayer(playerDTO));
         }
     }
 
@@ -132,9 +147,9 @@ public class PlayerServiceImpl implements IPlayerService {
     }
 
     @Override
-    public void getPercentageRanking(){
-        System.out.println(getPlayers().stream()
-                .mapToDouble(PlayerDTO::getPercentageWonDTO).sum());
+    public double getPercentageRanking(){
+        return getPlayers().stream()
+                .mapToDouble(PlayerDTO::getPercentageWonDTO).sum();
     }
 
     @Override

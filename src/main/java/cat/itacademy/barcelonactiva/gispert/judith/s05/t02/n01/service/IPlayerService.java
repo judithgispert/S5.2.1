@@ -13,11 +13,13 @@ public interface IPlayerService {
     public PlayerDTO updatePlayer(PlayerDTO newPlayerDTO, int id);
     public void deletePlayer(int id);
 
-    public void updateResultGames(DiceRollDTO diceRollDTO, Player player);
+    public void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO);
     public DiceRollDTO play(int id);
     List<DiceRollDTO> getGames(int id);
+    void deleteGames(int id);
+    void restartPercentage(PlayerDTO playerDTO);
     List<PlayerDTO> getRanking();
-    public void getPercentageRanking();
+    public double getPercentageRanking();
     public PlayerDTO getLoser();
     public PlayerDTO getWinner();
 }
