@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class S05T02N01F1GispertJudithApplication {
+public class S05T02N01GispertJudithApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(S05T02N01F1GispertJudithApplication.class, args);
+		SpringApplication.run(S05T02N01GispertJudithApplication.class, args);
 	}
 
 }
