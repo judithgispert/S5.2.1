@@ -4,6 +4,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.request.SignI
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.request.SignUpRequest;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.response.JwtAuthenticationResponse;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +19,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody SignUpRequest request){
+    public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody @Valid SignUpRequest request){
         return ResponseEntity.ok(authenticationService.signUp(request));
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<JwtAuthenticationResponse> signIp(@RequestBody SignInRequest request){
+    public ResponseEntity<JwtAuthenticationResponse> signIp(@RequestBody @Valid SignInRequest request){
         return ResponseEntity.ok(authenticationService.signIn(request));
     }
 }
