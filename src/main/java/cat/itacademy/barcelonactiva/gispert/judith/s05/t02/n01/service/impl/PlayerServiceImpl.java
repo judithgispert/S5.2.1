@@ -154,12 +154,12 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Override
     public PlayerDTO getLoser(){
-        return getRanking().stream().toList().getLast();
+        return getRanking().stream().toList().get(getRanking().size());
     }
 
     @Override
     public PlayerDTO getWinner(){
-        return getRanking().stream().toList().getFirst();
+        return getRanking().stream().toList().get(0);
     }
 
     private static Player playerDTOToPlayer(PlayerDTO playerDTO){
