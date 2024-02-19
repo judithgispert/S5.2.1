@@ -22,7 +22,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idPlayer;
+    private int id;
     @Column(name = "name", nullable = false, length = 50)
     private String name;
     @Column(name = "email", unique = true, nullable = false, length = 150)

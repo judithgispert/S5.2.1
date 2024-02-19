@@ -16,9 +16,9 @@ public class Player{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPlayer;
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", length = 50)
     private String name;
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     private LocalDateTime registrationDate;
 
     @Column(name = "games won")
