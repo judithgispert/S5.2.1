@@ -1,5 +1,7 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.controller;
 
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.User;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
@@ -17,8 +19,8 @@ public class DiceRollGameController {
     private final IPlayerService playerService;
 
     @PostMapping("/createPlayer")
-    public ResponseEntity<String> createPlayer(@RequestBody PlayerDTO playerDTO){
-        playerService.addPlayer(playerDTO);
+    public ResponseEntity<String> createPlayer(@RequestBody User user){
+        playerService.addPlayer(user);
         return new ResponseEntity<>("Player created successfully.", HttpStatus.CREATED);
     }
 
@@ -32,7 +34,7 @@ public class DiceRollGameController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/play/{id}")
     public ResponseEntity<DiceRollDTO> playDiceRoll(@PathVariable("id") int id){
         DiceRollDTO gameDiceRoll = playerService.play(id);
         return new ResponseEntity<>(gameDiceRoll, HttpStatus.OK);
@@ -45,12 +47,12 @@ public class DiceRollGameController {
     }
 
     @GetMapping("/getPlayers")
-    public ResponseEntity<List<PlayerDTO>> getPlayers(){
-        List<PlayerDTO> playersDTO = playerService.getPlayers();
-        if(playersDTO.isEmpty()){
+    public ResponseEntity<List<Player>> getPlayers(){
+        List<Player> players = playerService.getPlayers();
+        if(players.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(playersDTO, HttpStatus.OK);
+            return new ResponseEntity<>(players, HttpStatus.OK);
         }
     }
 
