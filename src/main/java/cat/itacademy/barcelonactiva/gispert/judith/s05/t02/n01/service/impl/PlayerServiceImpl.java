@@ -1,12 +1,15 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl;
 
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.User;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.DiceRollNotFoundException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.RepeatedValueException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.IPlayerRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,21 +17,27 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceImpl implements IPlayerService {
     @Autowired
     private IPlayerRepository playerRepository;
+    @Autowired
     private DiceRollServiceImpl diceRollService;
 
+    public PlayerDTO createPlayer(User user){
+        return new PlayerDTO(user);
+    }
     @Override
-    public void addPlayer(PlayerDTO playerDTO) {
-        if(playerDTO.getNameDTO().isEmpty()||playerDTO.getNameDTO().isBlank()){
+    public void addPlayer(User user) {
+        PlayerDTO playerDTO = createPlayer(user);
+        Player player = playerDTOToPlayer(playerDTO);
+        if(playerDTO.getNameDTO() == null||playerDTO.getNameDTO().isEmpty()||playerDTO.getNameDTO().isBlank()){
             playerDTO.setNameDTO("ANONYMOUS");
-            Player player = playerDTOToPlayer(playerDTO);
             playerRepository.save(player);
         } else {
-            Player player = playerDTOToPlayer(playerDTO);
             Optional<Player> playerName = playerRepository.findByName(player.getName());
             if (playerName.isPresent()){
                 throw new RepeatedValueException("This name already exist.");
@@ -49,13 +58,8 @@ public class PlayerServiceImpl implements IPlayerService {
     }
 
     @Override
-    public List<PlayerDTO> getPlayers() {
-        List<Player> players = playerRepository.findAll();
-        List<PlayerDTO> playersDTO = new ArrayList<>();
-        for (Player player : players){
-            playersDTO.add(playerToPlayerDTO(player));
-        }
-        return playersDTO;
+    public List<Player> getPlayers() {
+        return playerRepository.findAll();
     }
 
     @Override
@@ -64,7 +68,7 @@ public class PlayerServiceImpl implements IPlayerService {
         Optional<Player> player = playerRepository.findById(id);
         if(player.isPresent()){
             Player updatedPlayer = player.get();
-            if(newPlayerDTO.getNameDTO().isEmpty()||newPlayerDTO.getNameDTO().isBlank()){
+            if(newPlayerDTO.getNameDTO() == null||newPlayerDTO.getNameDTO().isEmpty()||newPlayerDTO.getNameDTO().isBlank()){
                 updatedPlayer.setName("ANONYMOUS");
             } else {
                 Optional<Player> playerName = playerRepository.findByName(newPlayer.getName());
@@ -94,34 +98,48 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Override
     public DiceRollDTO play(int id){
-        PlayerDTO playerDTO = getPlayerById(id);
-        Player player = playerDTOToPlayer(playerDTO);
-        DiceRollDTO diceRollDTO = diceRollService.addGame(player);
-        updateResultGames(diceRollDTO, playerToPlayerDTO(player));
-        return diceRollDTO;
+        Optional<Player> playerSearch = playerRepository.findById(id);
+        if(playerSearch.isPresent()){
+            Player player = playerSearch.get();
+            DiceRollDTO diceRollDTO = diceRollService.addGame(player);
+            updateResultGames(diceRollDTO, playerToPlayerDTO(player));
+            return diceRollDTO;
+        } else {
+            throw new PlayerNotFoundException("The id: " + id + ", doesn't correspond to any player.");
+        }
     }
 
     @Override
     public List<DiceRollDTO> getGames(int id) {
-        PlayerDTO playerDTO = getPlayerById(id);
-        Player player = playerDTOToPlayer(playerDTO);
-        return diceRollService.getGames(player);
+        Optional<Player> playerSearch = playerRepository.findById(id);
+        if(playerSearch.isPresent()){
+            Player player = playerSearch.get();
+            return diceRollService.getGames(player);
+        } else {
+            throw new PlayerNotFoundException("The id: " + id + ", doesn't correspond to any player.");
+        }
     }
 
     @Override
     public void deleteGames(int id){
-        PlayerDTO playerDTO = getPlayerById(id);
-        diceRollService.deleteGames(playerDTOToPlayer(playerDTO));
-        restartPercentage(playerDTO);
-        playerRepository.save(playerDTOToPlayer(playerDTO));
+        Optional<Player> playerSearch = playerRepository.findById(id);
+        if(playerSearch.isPresent()){
+            Player player = playerSearch.get();
+            diceRollService.deleteGames(player);
+            PlayerDTO playerDTO = restartPercentage(playerToPlayerDTO(player));
+            playerRepository.save(playerDTOToPlayer(playerDTO));
+        } else {
+            throw new PlayerNotFoundException("The id: " + id + ", doesn't correspond to any player.");
+        }
     }
 
     @Override
-    public void restartPercentage(PlayerDTO playerDTO){
+    public PlayerDTO restartPercentage(PlayerDTO playerDTO){
         playerDTO.setPercentageLostDTO(0);
         playerDTO.setPercentageWonDTO(0);
         playerDTO.setGamesLostDTO(0);
         playerDTO.setGamesWonDTO(0);
+        return playerDTO;
     }
 
     @Override
@@ -141,20 +159,27 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Override
     public List<PlayerDTO> getRanking(){
-        return getPlayers().stream()
-                .sorted(Comparator.comparingDouble(PlayerDTO::getPercentageWonDTO))
-                .toList();
+        List<Player> players = playerRepository.findAll();
+        List<PlayerDTO> playersRanking = new ArrayList<>();
+        players.stream().toList().forEach(l -> playersRanking.add(playerToPlayerDTO(l)));
+        playersRanking.sort(Comparator.comparingDouble(PlayerDTO::getPercentageWonDTO));
+        if(playersRanking.isEmpty()){
+            throw new DiceRollNotFoundException("No games played.");
+        }
+        return playersRanking;
     }
 
     @Override
     public double getPercentageRanking(){
-        return getPlayers().stream()
-                .mapToDouble(PlayerDTO::getPercentageWonDTO).sum();
+        List <Player> players = playerRepository.findAll();
+        List<PlayerDTO> playersDTO = new ArrayList<>();
+        players.stream().toList().forEach(l -> playersDTO.add(playerToPlayerDTO(l)));
+        return (playersDTO.stream().mapToDouble(PlayerDTO::getPercentageWonDTO).sum())/players.size();
     }
 
     @Override
     public PlayerDTO getLoser(){
-        return getRanking().stream().toList().get(getRanking().size());
+        return getRanking().stream().toList().get(getRanking().size()-1);
     }
 
     @Override
@@ -162,7 +187,7 @@ public class PlayerServiceImpl implements IPlayerService {
         return getRanking().stream().toList().get(0);
     }
 
-    private static Player playerDTOToPlayer(PlayerDTO playerDTO){
+    private Player playerDTOToPlayer(PlayerDTO playerDTO){
         Player player = new Player();
         player.setIdPlayer(playerDTO.getIdPlayerDTO());
         player.setName(playerDTO.getNameDTO());
@@ -175,7 +200,7 @@ public class PlayerServiceImpl implements IPlayerService {
         return player;
     }
 
-    private static PlayerDTO playerToPlayerDTO(Player player){
+    private PlayerDTO playerToPlayerDTO(Player player){
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setIdPlayerDTO(player.getIdPlayer());
         playerDTO.setNameDTO(player.getName());

@@ -3,11 +3,13 @@ package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.DiceRoll;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.IDiceRollRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IDiceRollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
@@ -25,8 +27,10 @@ public class DiceRollServiceImpl implements IDiceRollService {
 
     @Override
     public List<DiceRollDTO> getGames(Player player) {
-        List<DiceRoll> gamesPlayer = player.getGames();
-        return gamesPlayer.stream().map(DiceRollServiceImpl::diceRollToDTO).collect(Collectors.toList());
+        List<DiceRoll> gamesPlayer = diceRollRepository.findByPlayer(player);
+        List<DiceRollDTO> gamesDTOPlayer = new ArrayList<>();
+        gamesPlayer.stream().toList().forEach(l -> gamesDTOPlayer.add(diceRollToDTO(l)));
+        return gamesDTOPlayer;
     }
 
     @Override
