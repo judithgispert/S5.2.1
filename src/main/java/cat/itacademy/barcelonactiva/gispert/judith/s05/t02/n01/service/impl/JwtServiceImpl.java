@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService implements cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService {
+public class JwtServiceImpl implements cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
 
