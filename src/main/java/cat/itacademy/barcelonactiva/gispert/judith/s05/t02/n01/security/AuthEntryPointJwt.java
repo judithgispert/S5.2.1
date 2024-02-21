@@ -1,4 +1,4 @@
-package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.config;
+package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

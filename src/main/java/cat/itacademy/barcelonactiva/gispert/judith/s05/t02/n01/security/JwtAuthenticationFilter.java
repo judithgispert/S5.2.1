@@ -1,4 +1,4 @@
-package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.config;
+package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.security;
 
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.UserService;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl.JwtServiceImpl;
