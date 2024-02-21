@@ -162,7 +162,7 @@ public class PlayerServiceImpl implements IPlayerService {
         List<Player> players = playerRepository.findAll();
         List<PlayerDTO> playersRanking = new ArrayList<>();
         players.stream().toList().forEach(l -> playersRanking.add(playerToPlayerDTO(l)));
-        playersRanking.sort(Comparator.comparingDouble(PlayerDTO::getPercentageWonDTO));
+        playersRanking.sort(Comparator.comparing(PlayerDTO::getPercentageWonDTO));
         if(playersRanking.isEmpty()){
             throw new DiceRollNotFoundException("No games played.");
         }

@@ -8,19 +8,19 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import java.util.List;
 
 public interface IPlayerService {
-    public void addPlayer(User user);
-    public PlayerDTO getPlayerById(int id);
-    public List<Player> getPlayers();
-    public PlayerDTO updatePlayer(PlayerDTO newPlayerDTO, int id);
-    public void deletePlayer(int id);
+    void addPlayer(User user);
+    PlayerDTO getPlayerById(int id);
+    List<Player> getPlayers();
+    PlayerDTO updatePlayer(PlayerDTO newPlayerDTO, int id);
+    void deletePlayer(int id);
 
-    public void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO);
-    public DiceRollDTO play(int id);
+    void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO);
+    DiceRollDTO play(int id);
     List<DiceRollDTO> getGames(int id);
     void deleteGames(int id);
     PlayerDTO restartPercentage(PlayerDTO playerDTO);
     List<PlayerDTO> getRanking();
-    public double getPercentageRanking();
-    public PlayerDTO getLoser();
-    public PlayerDTO getWinner();
+    double getPercentageRanking();
+    PlayerDTO getLoser();
+    PlayerDTO getWinner();
 }
