@@ -17,6 +17,11 @@ public class DiceRollDTO {
         this.dice2 = DiceRandomNum.randomNum();
         this.resultWin = winGame();
     }
+    public DiceRollDTO (int dice1, int dice2){
+        this.dice1 = dice1;
+        this.dice2 = dice2;
+        this.resultWin = winGame();
+    }
 
     public boolean winGame(){
         boolean win;
