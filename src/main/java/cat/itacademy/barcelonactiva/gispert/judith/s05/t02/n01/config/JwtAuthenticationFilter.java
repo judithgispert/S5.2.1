@@ -1,7 +1,7 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.config;
 
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.UserService;
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl.JwtService;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtService;
     private final UserService userService;
 
     @Override
