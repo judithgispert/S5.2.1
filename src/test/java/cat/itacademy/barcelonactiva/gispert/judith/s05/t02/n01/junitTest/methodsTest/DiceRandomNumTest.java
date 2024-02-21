@@ -1,4 +1,4 @@
-package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.junitTest;
+package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.junitTest.methodsTest;
 
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.methods.DiceRandomNum;
 
