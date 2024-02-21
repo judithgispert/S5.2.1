@@ -35,8 +35,8 @@ public class DiceRollServiceImpl implements IDiceRollService {
 
     @Override
     public void deleteGames(Player player) {
-        List<DiceRoll> games = player.getGames();
-        games.forEach(games::remove);
+        List<DiceRoll> games = diceRollRepository.findByPlayer(player);
+        games.forEach(l -> diceRollRepository.delete(l));
     }
 
     private static DiceRoll dTOToDiceRoll(DiceRollDTO diceRollDTO, Player player){
