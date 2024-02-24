@@ -33,13 +33,12 @@ public class PlayerServiceImpl implements IPlayerService {
         this.diceRollService = diceRollService;
     }
 
-    public PlayerDTO createPlayer(String nameDTO){
-        return new PlayerDTO(nameDTO);
+    public PlayerDTO createPlayer(PlayerDTO playerDTO){
+        return new PlayerDTO(playerDTO.getNameDTO());
     }
     @Override
-    public void addPlayer(String nameDTO) {
-        PlayerDTO playerDTO = createPlayer(nameDTO);
-        Player player = playerDTOToPlayer(playerDTO);
+    public void addPlayer(PlayerDTO playerDTO) {
+        Player player = playerDTOToPlayer(createPlayer(playerDTO));
         if(playerDTO.getNameDTO() == null||playerDTO.getNameDTO().isEmpty()||playerDTO.getNameDTO().isBlank()){
             playerDTO.setNameDTO("ANONYMOUS");
             playerRepository.save(player);

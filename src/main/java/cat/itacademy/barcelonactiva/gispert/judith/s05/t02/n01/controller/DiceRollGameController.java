@@ -21,8 +21,8 @@ public class DiceRollGameController {
     private final IPlayerService playerService;
 
     @PostMapping("/createPlayer")
-    public ResponseEntity<String> createPlayer(@RequestBody String nameDTO){
-        playerService.addPlayer(nameDTO);
+    public ResponseEntity<String> createPlayer(@RequestBody PlayerDTO playerDTO){
+        playerService.addPlayer(playerDTO);
         return new ResponseEntity<>("Player created successfully.", HttpStatus.CREATED);
     }
 
