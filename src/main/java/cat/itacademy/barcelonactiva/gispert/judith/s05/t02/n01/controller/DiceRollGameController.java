@@ -6,6 +6,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +17,12 @@ import java.util.List;
 @RequestMapping("/api/v1/gameDiceRoll")
 @RequiredArgsConstructor
 public class DiceRollGameController {
+    @Autowired
     private final IPlayerService playerService;
 
     @PostMapping("/createPlayer")
-    public ResponseEntity<String> createPlayer(@RequestBody User user){
-        playerService.addPlayer(user);
+    public ResponseEntity<String> createPlayer(@RequestBody String nameDTO){
+        playerService.addPlayer(nameDTO);
         return new ResponseEntity<>("Player created successfully.", HttpStatus.CREATED);
     }
 

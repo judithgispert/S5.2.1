@@ -23,8 +23,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "firstName", nullable = false, length = 50)
+    private String firstname;
+    @Column(name = "lastName", nullable = false, length = 50)
+    private String lastName;
     @Column(name = "email", unique = true, nullable = false, length = 150)
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

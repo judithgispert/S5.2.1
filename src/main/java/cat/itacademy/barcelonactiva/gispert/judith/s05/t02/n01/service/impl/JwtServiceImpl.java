@@ -19,7 +19,6 @@ import java.util.function.Function;
 public class JwtServiceImpl implements cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
-
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -41,12 +40,22 @@ public class JwtServiceImpl implements cat.itacademy.barcelonactiva.gispert.judi
         return claimsResolvers.apply(claims);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
-        return Jwts.builder().setClaims(extraClaims)
+
+
+
+    @SuppressWarnings("deprecation")
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        long expirationTimeInMillis = System.currentTimeMillis() + 1000 * 60 * 24 * 30;
+
+        Date expirationDate = new Date(expirationTimeInMillis);
+
+        return Jwts.builder()
+                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+                .setIssuedAt(new Date())
+                .setExpiration(expirationDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {
@@ -57,9 +66,13 @@ public class JwtServiceImpl implements cat.itacademy.barcelonactiva.gispert.judi
         return extractClaim(token, Claims::getExpiration);
     }
 
+
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().verifyWith(getSigningKey())
-                .build().parseSignedClaims(token).getPayload();
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private SecretKey getSigningKey() {

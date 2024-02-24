@@ -24,9 +24,9 @@ public class PlayerDTO {
         gamesDTO = new ArrayList<>();
     }
 
-    public PlayerDTO(User user) {
+    public PlayerDTO(String nameDTO) {
         this.registrationDateDTO = LocalDateTime.now();
-        this.nameDTO = user.getName();
+        this.nameDTO = nameDTO;
         gamesDTO = new ArrayList<>();
     }
 }

@@ -8,6 +8,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.DiceRo
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.RepeatedValueException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.IPlayerRepository;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IDiceRollService;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,17 @@ public class PlayerServiceImpl implements IPlayerService {
     @Autowired
     private DiceRollServiceImpl diceRollService;
 
-    public PlayerDTO createPlayer(User user){
-        return new PlayerDTO(user);
+    public PlayerServiceImpl(IPlayerRepository playerRepository, DiceRollServiceImpl diceRollService) {
+        this.playerRepository = playerRepository;
+        this.diceRollService = diceRollService;
+    }
+
+    public PlayerDTO createPlayer(String nameDTO){
+        return new PlayerDTO(nameDTO);
     }
     @Override
-    public void addPlayer(User user) {
-        PlayerDTO playerDTO = createPlayer(user);
+    public void addPlayer(String nameDTO) {
+        PlayerDTO playerDTO = createPlayer(nameDTO);
         Player player = playerDTOToPlayer(playerDTO);
         if(playerDTO.getNameDTO() == null||playerDTO.getNameDTO().isEmpty()||playerDTO.getNameDTO().isBlank()){
             playerDTO.setNameDTO("ANONYMOUS");

@@ -8,7 +8,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import java.util.List;
 
 public interface IPlayerService {
-    void addPlayer(User user);
+    void addPlayer(String nameDTO);
     PlayerDTO getPlayerById(int id);
     List<Player> getPlayers();
     PlayerDTO updatePlayer(PlayerDTO newPlayerDTO, int id);
