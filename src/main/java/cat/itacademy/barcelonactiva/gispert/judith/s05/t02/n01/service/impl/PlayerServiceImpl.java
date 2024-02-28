@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl;
 
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.User;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +26,9 @@ public class PlayerServiceImpl implements IPlayerService {
     @Autowired
     private DiceRollServiceImpl diceRollService;
 
-    public PlayerServiceImpl(IPlayerRepository playerRepository, DiceRollServiceImpl diceRollService) {
-        this.playerRepository = playerRepository;
-        this.diceRollService = diceRollService;
+    public PlayerServiceImpl(IPlayerRepository playerRepository, IDiceRollService diceRollService) {
     }
+
 
     public PlayerDTO createPlayer(PlayerDTO playerDTO){
         return new PlayerDTO(playerDTO.getNameDTO());
@@ -91,17 +88,6 @@ public class PlayerServiceImpl implements IPlayerService {
     }
 
     @Override
-    public void deletePlayer(int id) {
-        Optional<Player> player = playerRepository.findById(id);
-        if(player.isPresent()){
-            playerRepository.deleteById(id);
-        } else {
-            throw new PlayerNotFoundException("The id: " + id + ", doesn't correspond to any player.");
-        }
-    }
-
-
-    @Override
     public DiceRollDTO play(int id){
         Optional<Player> playerSearch = playerRepository.findById(id);
         if(playerSearch.isPresent()){
@@ -151,12 +137,14 @@ public class PlayerServiceImpl implements IPlayerService {
     public void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO){
         if(diceRollDTO.winGame()){
             playerDTO.setGamesWonDTO(playerDTO.getGamesWonDTO()+1);
-            double resultPercentageWon = ((double) playerDTO.getGamesWonDTO() / playerDTO.getGamesDTO().size())*100;
+            double resultPercentageWon = ((double) playerDTO.getGamesWonDTO() /
+                    (playerDTO.getGamesWonDTO() + playerDTO.getGamesLostDTO()))*100;
             playerDTO.setPercentageWonDTO(resultPercentageWon);
             playerRepository.save(playerDTOToPlayer(playerDTO));
         } else {
             playerDTO.setGamesLostDTO(playerDTO.getGamesLostDTO()+1);
-            double resultPercentageLost = (100 - playerDTO.getPercentageWonDTO());
+            double resultPercentageLost = ((double) playerDTO.getGamesLostDTO() /
+                    (playerDTO.getGamesWonDTO() + playerDTO.getGamesLostDTO()))*100;
             playerDTO.setPercentageLostDTO(resultPercentageLost);
             playerRepository.save(playerDTOToPlayer(playerDTO));
         }
@@ -192,7 +180,8 @@ public class PlayerServiceImpl implements IPlayerService {
         return getRanking().stream().toList().get(0);
     }
 
-    private Player playerDTOToPlayer(PlayerDTO playerDTO){
+    @Override
+    public Player playerDTOToPlayer(PlayerDTO playerDTO){
         Player player = new Player();
         player.setIdPlayer(playerDTO.getIdPlayerDTO());
         player.setName(playerDTO.getNameDTO());
@@ -205,7 +194,8 @@ public class PlayerServiceImpl implements IPlayerService {
         return player;
     }
 
-    private PlayerDTO playerToPlayerDTO(Player player){
+    @Override
+    public PlayerDTO playerToPlayerDTO(Player player){
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setIdPlayerDTO(player.getIdPlayer());
         playerDTO.setNameDTO(player.getName());

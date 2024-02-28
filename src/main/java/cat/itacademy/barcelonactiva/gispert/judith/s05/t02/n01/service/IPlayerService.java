@@ -12,7 +12,6 @@ public interface IPlayerService {
     PlayerDTO getPlayerById(int id);
     List<Player> getPlayers();
     PlayerDTO updatePlayer(PlayerDTO newPlayerDTO, int id);
-    void deletePlayer(int id);
 
     void updateResultGames(DiceRollDTO diceRollDTO, PlayerDTO playerDTO);
     DiceRollDTO play(int id);
@@ -23,4 +22,8 @@ public interface IPlayerService {
     double getPercentageRanking();
     PlayerDTO getLoser();
     PlayerDTO getWinner();
+
+    Player playerDTOToPlayer(PlayerDTO playerDTO);
+
+    PlayerDTO playerToPlayerDTO(Player player);
 }
