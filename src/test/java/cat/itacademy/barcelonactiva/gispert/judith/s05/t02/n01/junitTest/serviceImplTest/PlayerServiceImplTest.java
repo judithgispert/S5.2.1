@@ -42,18 +42,31 @@ public class PlayerServiceImplTest {
     private Player player;
     private Player playerAnonymous;
     private List<Player> players = new ArrayList<>();
-    private List<DiceRollDTO> gamesDTO = new ArrayList<>();
+    private List<DiceRollDTO> gamesDTO1 = new ArrayList<>();
+    private List<DiceRollDTO> gamesDTO2 = new ArrayList<>();
     @BeforeEach
     void setUp() {
         player = new Player("Judith");
         player.setIdPlayer(1);
         players.add(player);
+        DiceRollDTO diceRollDTO1 = new DiceRollDTO(3,1);
+        DiceRollDTO diceRollDTO2 = new DiceRollDTO(2,6);
+        gamesDTO1.add(diceRollDTO1);
+        gamesDTO1.add(diceRollDTO2);
+        player.setPercentageLost(100.0);
+        player.setPercentageWon(0.0);
+        PlayerDTO playerDTO = playerService.playerToPlayerDTO(player);
 
-        playerAnonymous = new Player();
+        playerAnonymous = new Player("Anonymous");
         playerAnonymous.setIdPlayer(2);
         players.add(playerAnonymous);
-        DiceRollDTO diceRollDTO = new DiceRollDTO();
-        gamesDTO.add(diceRollDTO);
+        DiceRollDTO diceRollDTO3 = new DiceRollDTO(1,4);
+        DiceRollDTO diceRollDTO4 = new DiceRollDTO(2,5);
+        gamesDTO2.add(diceRollDTO3);
+        gamesDTO2.add(diceRollDTO4);
+        playerAnonymous.setPercentageLost(50.0);
+        playerAnonymous.setPercentageWon(50.0);
+        PlayerDTO playerDTOAnonymous = playerService.playerToPlayerDTO(playerAnonymous);
     }
 
     @DisplayName("Add player test")
@@ -106,7 +119,7 @@ public class PlayerServiceImplTest {
     @Test
     void playGameTest(){
         DiceRollDTO diceRollDTO = new DiceRollDTO();
-        gamesDTO.add(diceRollDTO);
+        gamesDTO2.add(diceRollDTO);
         Mockito.when(playerRepository.findById(2)).thenReturn
                 (Optional.of(playerAnonymous));
         Mockito.when(diceRollService.addGame(playerAnonymous))
@@ -125,12 +138,42 @@ public class PlayerServiceImplTest {
         verify(diceRollService).deleteGames(playerAnonymous);
     }
 
-    //@DisplayName("Update results test")
-    //@Test
+    @DisplayName("Get ranking test")
+    @Test
+    void getRankingTest(){
+        Mockito.when(playerRepository.findAll()).thenReturn
+                (Arrays.asList(player, playerAnonymous));
+        List<PlayerDTO> getRanking = playerService.getRanking();
+        assertEquals("Anonymous", getRanking.get(0).getNameDTO());
+        assertEquals("Judith", getRanking.get(1).getNameDTO());
+    }
 
-    //@DisplayName("Get ranking test")
-    //@Test
+    @DisplayName("Get percentage ranking test")
+    @Test
+    void getPercentageRankingTest(){
+        Mockito.when(playerRepository.findAll()).thenReturn
+                (Arrays.asList(playerAnonymous, player));
+        double result = (playerAnonymous.getPercentageWon() + player.getPercentageWon()) / 2;
+        double resultExpected = playerService.getPercentageRanking();
+        assertEquals(result, resultExpected);
+    }
 
-    
+    @DisplayName("Get loser test")
+    @Test
+    void getLoserTest(){
+        Mockito.when(playerRepository.findAll()).thenReturn
+                (Arrays.asList(playerAnonymous, player));
+        PlayerDTO playerLoser = playerService.getLoser();
+        assertEquals("Judith", playerLoser.getNameDTO());
+    }
+
+    @DisplayName("Get winner test")
+    @Test
+    void getWinnerTest(){
+        Mockito.when(playerRepository.findAll()).thenReturn
+                (Arrays.asList(playerAnonymous, player));
+        PlayerDTO playerWinner = playerService.getWinner();
+        assertEquals("Anonymous", playerWinner.getNameDTO());
+    }
 
 }
