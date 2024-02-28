@@ -9,6 +9,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IDiceRoll
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl.DiceRollServiceImpl;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl.PlayerServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -124,22 +125,12 @@ public class PlayerServiceImplTest {
         verify(diceRollService).deleteGames(playerAnonymous);
     }
 
-    //@DisplayName("Restart percentage test")
-    //@Test
-
     //@DisplayName("Update results test")
     //@Test
 
     //@DisplayName("Get ranking test")
     //@Test
 
-    //@DisplayName("Get percentage ranking test")
-    //@Test
-
-    //@DisplayName("Get loser test")
-    //@Test
-
-    //@DisplayName("Get winner test")
-    //@Test
+    
 
 }
