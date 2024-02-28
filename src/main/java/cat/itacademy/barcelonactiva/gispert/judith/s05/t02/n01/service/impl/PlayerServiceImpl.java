@@ -155,7 +155,7 @@ public class PlayerServiceImpl implements IPlayerService {
         List<Player> players = playerRepository.findAll();
         List<PlayerDTO> playersRanking = new ArrayList<>();
         players.stream().toList().forEach(l -> playersRanking.add(playerToPlayerDTO(l)));
-        playersRanking.sort(Comparator.comparing(PlayerDTO::getPercentageWonDTO));
+        playersRanking.sort(Comparator.comparing(PlayerDTO::getPercentageWonDTO).reversed());
         if(playersRanking.isEmpty()){
             throw new DiceRollNotFoundException("No games played.");
         }
@@ -172,12 +172,14 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Override
     public PlayerDTO getLoser(){
-        return getRanking().stream().toList().get(getRanking().size()-1);
+        List<PlayerDTO> rankingList = getRanking();
+        return rankingList.get(rankingList.size()-1);
     }
 
     @Override
     public PlayerDTO getWinner(){
-        return getRanking().stream().toList().get(0);
+        List<PlayerDTO> rankingList = getRanking();
+        return rankingList.get(0);
     }
 
     @Override

@@ -36,4 +36,9 @@ public class Player{
         this.registrationDate = LocalDateTime.now();
         games = new ArrayList<>();
     }
+    public Player(String name){
+        this.name = name;
+        this.registrationDate = LocalDateTime.now();
+        games = new ArrayList<>();
+    }
 }
