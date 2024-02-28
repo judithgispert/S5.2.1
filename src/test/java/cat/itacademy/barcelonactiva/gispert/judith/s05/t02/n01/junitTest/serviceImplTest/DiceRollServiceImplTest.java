@@ -70,12 +70,4 @@ public class DiceRollServiceImplTest {
         Assertions.assertThat(games).hasSize(gamesExpected.size());
         assertTrue(new ReflectionEquals(games).matches(gamesExpected));
     }
-    
-    /*
-    @DisplayName("Delete game test")
-    @Test
-    void deleteGamesTest(){
-
-    }
-    */
 }
