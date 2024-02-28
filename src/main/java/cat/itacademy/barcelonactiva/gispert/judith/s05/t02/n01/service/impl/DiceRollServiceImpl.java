@@ -3,7 +3,6 @@ package cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.impl;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.DiceRoll;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.DiceRollDTO;
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.IDiceRollRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IDiceRollService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 public class DiceRollServiceImpl implements IDiceRollService {
     @Autowired
     private IDiceRollRepository diceRollRepository;
+
+    public DiceRollServiceImpl(IDiceRollRepository diceRollRepository) {
+    }
 
     @Override
     public DiceRollDTO addGame(Player player) {
@@ -39,14 +41,17 @@ public class DiceRollServiceImpl implements IDiceRollService {
         games.forEach(l -> diceRollRepository.delete(l));
     }
 
-    private static DiceRoll dTOToDiceRoll(DiceRollDTO diceRollDTO, Player player){
+    @Override
+    public DiceRoll dTOToDiceRoll(DiceRollDTO diceRollDTO, Player player){
         DiceRoll diceRoll = new DiceRoll(player);
         diceRoll.setIdDiceRoll(diceRollDTO.getIdDiceRoll());
         diceRoll.setDice1(diceRollDTO.getDice1());
         diceRoll.setDice2(diceRollDTO.getDice2());
         return diceRoll;
     }
-    private static DiceRollDTO diceRollToDTO(DiceRoll diceRoll){
+
+    @Override
+    public DiceRollDTO diceRollToDTO(DiceRoll diceRoll){
         DiceRollDTO diceRollDTO = new DiceRollDTO();
         diceRollDTO.setIdDiceRoll(diceRoll.getIdDiceRoll());
         diceRollDTO.setDice1(diceRoll.getDice1());
