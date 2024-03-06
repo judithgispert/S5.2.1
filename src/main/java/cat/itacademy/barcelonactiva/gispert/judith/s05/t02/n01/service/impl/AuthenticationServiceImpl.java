@@ -5,8 +5,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.User;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.response.JwtAuthenticationResponse;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.request.SignInRequest;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.request.SignUpRequest;
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.PlayerNotFoundException;
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.RepeatedValueException;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.EmailAlreadyExistException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.UserRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.AuthenticationService;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.JwtService;
@@ -33,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userRepository.findByEmail(request.getEmail())
                 .ifPresent(user -> {
-                    throw new RepeatedValueException("Email is already registered:" + user.getEmail());
+                    throw new EmailAlreadyExistException("Email is already registered:" + user.getEmail());
                 });
 
         User user = User.builder().firstname(request.getFirstName()).lastName(request.getLastName())
