@@ -5,7 +5,7 @@ import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.DiceRollNotFoundException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.PlayerNotFoundException;
-import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.RepeatedValueException;
+import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.exceptions.PlayerNameAlreadyExistException;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.repository.IPlayerRepository;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IDiceRollService;
 import cat.itacademy.barcelonactiva.gispert.judith.s05.t02.n01.service.IPlayerService;
@@ -24,7 +24,7 @@ public class PlayerServiceImpl implements IPlayerService {
     @Autowired
     private IPlayerRepository playerRepository;
     @Autowired
-    private DiceRollServiceImpl diceRollService;
+    private IDiceRollService diceRollService;
 
     public PlayerServiceImpl(IPlayerRepository playerRepository, IDiceRollService diceRollService) {
     }
@@ -42,7 +42,7 @@ public class PlayerServiceImpl implements IPlayerService {
         } else {
             Optional<Player> playerName = playerRepository.findByName(player.getName());
             if (playerName.isPresent()){
-                throw new RepeatedValueException("This name already exist.");
+                throw new PlayerNameAlreadyExistException("This name already exist.");
             } else {
                 playerRepository.save(player);
             }
@@ -75,7 +75,7 @@ public class PlayerServiceImpl implements IPlayerService {
             } else {
                 Optional<Player> playerName = playerRepository.findByName(newPlayer.getName());
                 if (playerName.isPresent()){
-                    throw new RepeatedValueException("This name already exist.");
+                    throw new PlayerNameAlreadyExistException("This name already exist.");
                 } else {
                     updatedPlayer.setName(newPlayer.getName());
                 }
